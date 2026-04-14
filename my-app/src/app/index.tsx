@@ -1,9 +1,6 @@
 import * as Device from 'expo-device';
 import {  StyleSheet, Text, View, ActivityIndicator  } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
 import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
 import { fetchWeatherApi } from "openmeteo";
 import { useEffect, useState } from 'react';
@@ -34,23 +31,19 @@ export default function HomeScreen() {
   }, []);
 
   return (
-    <ThemedView style={styles.container}>
-      
-        <ThemedView style={styles.heroSection}>
-          <ThemedText type="title" style={styles.title}>
+    <View style={styles.container}>
+          <Text style={styles.title}>
            Météo à Paris
-          </ThemedText>
+          </Text>
           {loading ? (
         <ActivityIndicator />
       ) : (
         <>
-        <Text style={{ fontSize: 40 }}>{temp}°C</Text>
-        <Text style={{ fontSize: 40 }}>{weather}</Text>
+        <Text style={styles.meteo}>{weather}</Text>
+        <Text style={styles.meteo}>{temp}°C</Text>
         </>
       )}
-        </ThemedView>
-
-    </ThemedView>
+        </View>
   );
 }
 
@@ -58,34 +51,16 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    flexDirection: 'row',
-  },
-  safeArea: {
-    flex: 1,
-    paddingHorizontal: Spacing.four,
     alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
   },
-  heroSection: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
-  },
+
   title: {
     textAlign: 'center',
+    fontSize: 40,
+    fontWeight: 'bold'
   },
-  code: {
-    textTransform: 'uppercase',
-  },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  meteo: {
+    textAlign: 'center',
+    fontSize: 30,
   },
 });
