@@ -1,8 +1,10 @@
 import * as Device from "expo-device";
-import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity} from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button} from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
+import { Picker } from '@react-native-picker/picker';
+import { useRouter } from 'expo-router';
 
 export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,8 @@ export default function HomeScreen() {
   const [error, setError] = useState("");
   const [weatherColor, setWeatherColor] = useState("#000");
   const [weatherIcon, setWeatherIcon] = useState<any>("");
+  const [choosCity, setChoosCity] = useState("Paris");
+  const router = useRouter();
 
  const fetchWeather = async () => {
   setLoading(true);
@@ -90,6 +94,11 @@ export default function HomeScreen() {
 
   return (
     <View style={styles.container}>
+      <Text>Choississez une ville</Text>
+      <Picker
+      selectedValue={}
+
+
       <Text style={styles.title}>Météo à {city || "..."}</Text>
       {loading ? (
         <ActivityIndicator />
@@ -136,7 +145,7 @@ const styles = StyleSheet.create({
   button: {
     flexDirection: "row",
     alignItems: "center",
-    backgroundColor: "#333",
+    backgroundColor: "#5B7CA4",
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 30,
