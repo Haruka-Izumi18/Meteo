@@ -1,10 +1,11 @@
 import * as Device from "expo-device";
-import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity, Button} from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity } from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import { Picker } from '@react-native-picker/picker';
+import { Dropdown } from 'react-native-element-dropdown';
 import { useRouter } from 'expo-router';
+import { CityPickerDropdown } from "@/components/CityPickerDropdown";
 
 export default function HomeScreen() {
   const [loading, setLoading] = useState(true);
@@ -14,7 +15,7 @@ export default function HomeScreen() {
   const [error, setError] = useState("");
   const [weatherColor, setWeatherColor] = useState("#000");
   const [weatherIcon, setWeatherIcon] = useState<any>("");
-  const [choosCity, setChoosCity] = useState("Paris");
+  const [selectedCity, setSelectedCity] = useState("");
   const router = useRouter();
 
  const fetchWeather = async () => {
@@ -47,7 +48,6 @@ export default function HomeScreen() {
           },
         );
         const geoData = await geoRes.json();
-        console.log("geoData:", geoData); 
         const cityName =
           geoData.address?.city ||
           geoData.address?.town ||
@@ -93,12 +93,12 @@ export default function HomeScreen() {
     }, []);
 
   return (
+    <>
+    <View style={styles.menu}>
+      <Text style={{fontWeight: "bold", fontSize: 17}}>Choississez une ville</Text>
+      <CityPickerDropdown />
+      </View>
     <View style={styles.container}>
-      <Text>Choississez une ville</Text>
-      <Picker
-      selectedValue={}
-
-
       <Text style={styles.title}>Météo à {city || "..."}</Text>
       {loading ? (
         <ActivityIndicator />
@@ -118,16 +118,22 @@ export default function HomeScreen() {
         <Text style={styles.buttonText}>Actualiser</Text>
       </TouchableOpacity>
     </View>
+    </>
   );
 }
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
-
+  menu:{
+    margin: 30,
+    position: "absolute",
+    top: 50,
+    right: 10,
+    width: 180,
+  },
   title: {
     textAlign: "center",
     fontSize: 40,
@@ -141,6 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+    gap: 20
   },
   button: {
     flexDirection: "row",
@@ -157,4 +164,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
+
+  link:{
+    color: 'blue', marginTop: 10
+  }
 });
+
