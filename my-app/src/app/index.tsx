@@ -1,5 +1,5 @@
 import * as Device from "expo-device";
-import { StyleSheet, Text, View, ActivityIndicator, Alert } from "react-native";
+import { StyleSheet, Text, View, ActivityIndicator, TouchableOpacity} from "react-native";
 import { useEffect, useState } from "react";
 import * as Location from "expo-location";
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
@@ -11,10 +11,11 @@ export default function HomeScreen() {
   const [city, setCity] = useState("");
   const [error, setError] = useState("");
   const [weatherColor, setWeatherColor] = useState("#000");
-  const [weatherIcon, setWeatherIcon] = useState("");
+  const [weatherIcon, setWeatherIcon] = useState<any>("");
 
-  useEffect(() => {
-    (async () => {
+ const fetchWeather = async () => {
+  setLoading(true);
+  setError("");
       try {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== "granted") {
@@ -22,9 +23,8 @@ export default function HomeScreen() {
           setLoading(false);
           return;
         }
-      let location;
-        location = await Location.getCurrentPositionAsync({
-          accuracy: Location.Accuracy.Balanced,
+      const location = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
         });
       
       if (!location) {
@@ -62,7 +62,7 @@ export default function HomeScreen() {
           setWeatherColor("#F54927");
           setWeatherIcon("weather-sunny");
         } else if (code <= 3) {setWeather("Nuageux");
-          setWeatherColor("#CAD1D9");
+          setWeatherColor("#B3C3D5");
           setWeatherIcon("weather-cloudy");
         } else if (code <= 48) {setWeather("brouillard");
           setWeatherColor("#CAD6D9");
@@ -82,9 +82,11 @@ export default function HomeScreen() {
       } finally {
         setLoading(false);
       }
-      
-    })();
-  }, []);
+    };
+
+    useEffect(() => {
+      fetchWeather();
+    }, []);
 
   return (
     <View style={styles.container}>
@@ -102,6 +104,10 @@ export default function HomeScreen() {
           <Text style={styles.meteo}>{temp}°C</Text>
         </View>
       )}
+      <TouchableOpacity style={styles.button} onPress={fetchWeather} disabled={loading}>
+        <MaterialCommunityIcons name="refresh" size={24} color="white" />
+        <Text style={styles.buttonText}>Actualiser</Text>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -126,5 +132,20 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-  }
+  },
+  button: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#333",
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 30,
+    marginTop: 40,
+    gap: 8,
+  },
+  buttonText: {
+    color: "white",
+    fontSize: 16,
+    fontWeight: "bold",
+  },
 });
